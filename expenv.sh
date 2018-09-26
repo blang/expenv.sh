@@ -23,8 +23,8 @@ if [ -n "$inPlace" ] && [ -z "$useFile" ]; then
  echo "Error: Option -i depends on option -f" >&2
 fi
 
-if [ -n "$inPlace" ]; then 
-  tmpFile=`mktemp`
+if [ -n "$inPlace" ]; then
+  tmpFile="$(mktemp)"
 fi
 
 # Eval each line and redirect to tmpFile if set, otherwise to process stdout
@@ -34,6 +34,6 @@ sed 's/"/\\"/g' "${useFile:-/proc/${$}/fd/0}" |
   done > "${tmpFile:-/proc/${$}/fd/1}"
 
 # Overwrite file
-if [ -n "$inPlace" ]; then 
+if [ -n "$inPlace" ]; then
   mv -- $tmpFile $useFile
 fi
