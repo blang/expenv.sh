@@ -28,9 +28,10 @@ if [ -n "$inPlace" ]; then
 fi
 
 # Eval each line and redirect to tmpFile if set, otherwise to process stdout
-while read -r line; do
-  eval "echo $line" >> "${tmpFile:-/proc/${$}/fd/1}"
-done < "${useFile:-/proc/${$}/fd/0}"
+sed 's/"/\\"/g' "${useFile:-/proc/${$}/fd/0}" |
+  while IFS='' read -r line; do
+    eval "echo \"$line\""
+  done > "${tmpFile:-/proc/${$}/fd/1}"
 
 # Overwrite file
 if [ -n "$inPlace" ]; then 
